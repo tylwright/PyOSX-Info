@@ -50,7 +50,7 @@ def get_cpu_information():
     # Get number of logical cores that the system has
     cpu_logical_cores = int(os.popen('sysctl hw.logicalcpu').read().rstrip().translate(None, 'hw.logicalcpu: '))
     
-    # Return architecture
+    # Return CPU info
     return cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores
     
 def get_ram_information():
@@ -63,7 +63,21 @@ def get_ram_information():
     # Get total RAM (in human readable format)
     ram_total = size(int(os.popen('sysctl hw.memsize').read().rstrip().translate(None, 'hw.memsize: ')))
     
+    # Return total RAM
     return ram_total
+    
+def get_hostname():
+    """
+    Detects the system's hostname
+    Returns:
+        hostname [string]: System's hostname (ex. mac.company.com)
+    """
+    
+    # Get hostname
+    hostname = os.popen('sysctl kern.hostname').read().rstrip().replace('kern.hostname: ', '')
+    
+    # Return hostname
+    return hostname
   
 def print_results(type):
     """
@@ -76,6 +90,9 @@ def print_results(type):
     # Get OS X version number
     osx_version_number = get_osx_version()
     
+    # Get hostname
+    hostname = get_hostname()
+    
     # Get CPU info
     cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
     
@@ -85,6 +102,7 @@ def print_results(type):
     # Print results
     print "========================================"
     print "Mac OS X {}".format(osx_version_number)
+    print "{}".format(hostname)
     print "========================================"
     print "CPU Info:"
     cpu_table = [
