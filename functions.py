@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os, sys, platform
 from tabulate import tabulate
+from hurry.filesize import size
 
 def confirm_osx():
     """
@@ -29,10 +30,12 @@ def get_osx_version():
     
 def get_cpu_information():
     """
-    Detects what architecture the system is
+    Detects information about the CPU
     Returns:
-        architecture [string]: CPU architecture (ex. x86)
-        cpu_model [string]
+        cpu_architecture [string]: CPU architecture (ex. x86)
+        cpu_model [string]: CPU model (ex. Intel Core i7 CPU @ 3.50GHz)
+        cpu_physical_cores[int]: Number of physical cores
+        cpu_logical_cores [int]: Number of logical cores
     """
     
     # Get CPU architecture
@@ -42,13 +45,25 @@ def get_cpu_information():
     cpu_model = os.popen('sysctl -n machdep.cpu.brand_string').read().rstrip()
     
     # Get number of physical cores that the system has
-    cpu_physical_cores = os.popen('sysctl hw.physicalcpu').read().rstrip().translate(None, 'hw.physicalcpu: ')
+    cpu_physical_cores = int(os.popen('sysctl hw.physicalcpu').read().rstrip().translate(None, 'hw.physicalcpu: '))
     
     # Get number of logical cores that the system has
-    cpu_logical_cores = os.popen('sysctl hw.logicalcpu').read().rstrip().translate(None, 'hw.logicalcpu: ')
+    cpu_logical_cores = int(os.popen('sysctl hw.logicalcpu').read().rstrip().translate(None, 'hw.logicalcpu: '))
     
     # Return architecture
     return cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores
+    
+def get_ram_information():
+    """
+    Detects information about the RAM
+    Returns:
+        ram_total [string]: Total amount of RAM in human readable format
+    """
+    
+    # Get total RAM (in human readable format)
+    ram_total = size(int(os.popen('sysctl hw.memsize').read().rstrip().translate(None, 'hw.memsize: ')))
+    
+    return ram_total
   
 def print_results(type):
     """
@@ -61,8 +76,11 @@ def print_results(type):
     # Get OS X version number
     osx_version_number = get_osx_version()
     
-    # Get system architecture
+    # Get CPU info
     cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
+    
+    # Get RAM info
+    ram_total = get_ram_information()
     
     # Print results
     print "========================================"
@@ -76,4 +94,9 @@ def print_results(type):
         ["Logical Cores", cpu_logical_cores]
     ]
     print tabulate(cpu_table, tablefmt="fancy_grid")
+    print "\nRAM Info:"
+    ram_table = [
+        ["Total RAM:", ram_total]
+    ]
+    print tabulate(ram_table, tablefmt="fancy_grid")
     #print tabulate(cpu_table, tablefmt="html") # Future web interface?
