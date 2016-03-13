@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os, sys, platform
+import datetime, os, sys, platform
 from tabulate import tabulate
 from hurry.filesize import size
 
@@ -91,6 +91,19 @@ def get_uuid():
     
     # Return UUID
     return uuid
+    
+def get_clocks():
+    """
+    Detects various clocks such as current time/date, last reboot, uptime, etc.
+    Returns:
+        last_boot [string]: Date when the system was last booted
+    """
+    
+    # Get Uptime
+    last_boot = os.popen('sysctl kern.boottime').read().rstrip()
+    last_boot = last_boot.split(' } ')[1]
+    
+    return last_boot
   
 def print_results(type):
     """
@@ -109,6 +122,9 @@ def print_results(type):
     # Get UUID
     uuid = get_uuid()
     
+    # Get Clocks
+    last_boot = get_clocks()
+    
     # Get CPU info
     cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
     
@@ -121,6 +137,11 @@ def print_results(type):
     print "{}".format(hostname)
     print "{}".format(uuid)
     print "========================================"
+    print "System Clocks:"
+    clocks_table = [
+        ["Last Boot", last_boot]
+    ]
+    print tabulate(clocks_table, tablefmt="fancy_grid")
     print "CPU Info:"
     cpu_table = [
         ["Model", cpu_model],

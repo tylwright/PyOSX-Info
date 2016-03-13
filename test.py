@@ -191,5 +191,28 @@ class UUIDTest(unittest.TestCase):
         # Check to make sure the returned value is a string
         self.assertEqual(type(uuid), str)
         
+class ClocksTest(unittest.TestCase):
+    """
+    Tests the get_clocks function
+    """
+    
+    def test_last_boot_value(self):
+        """
+        Tests the get_clocks function for last_boot
+        """
+        last_boot = get_clocks()
+        
+        # Check to make sure the returned value is not null
+        self.assertIsNotNone(last_boot)
+    
+    def test_last_boot_type(self):
+        """
+        Tests the get_clocks function for last_boot
+        """
+        last_boot = get_clocks()
+        
+        # Check to make sure the returned value is a string
+        self.assertEqual(type(last_boot), str)
+        
 if __name__ == '__main__':
     unittest.main(verbosity=2)
