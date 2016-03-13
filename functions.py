@@ -19,14 +19,43 @@ def get_osx_version():
     """
     Detects which version of OS X the system is running
     Returns:
-        running_version[0] [string]: Version number (ex. 10.11.1)
+        running_version_number [string]: Version number (ex. 10.11.1)
+        running_version_name [string]: Version name (ex. El Capitan)
     """
     
-    # Get version
-    running_version = platform.mac_ver()
+    # Get version number
+    running_version_number = platform.mac_ver()
+    running_version_number = running_version_number[0]
+    
+    if running_version_number.startswith('10.11'):
+        running_version_name = "El Capitan"
+    elif running_version_number.startswith('10.10'):
+        running_version_name = "Yosemite"
+    elif running_version_number.startswith('10.9'):
+        running_version_name = "Mavericks"
+    elif running_version_number.startswith('10.8'):
+        running_version_name = "Mountain Lion"
+    elif running_version_number.startswith('10.7'):
+        running_version_name = "Lion"
+    elif running_version_number.startswith('10.6'):
+        running_version_name = "Snow Leopard"
+    elif running_version_number.startswith('10.5'):
+        running_version_name = "Leopard"
+    elif running_version_number.startswith('10.4'):
+        running_version_name = "Tiger"
+    elif running_version_number.startswith('10.3'):
+        running_version_name = "Panther"
+    elif running_version_number.startswith('10.2'):
+        running_version_name = "Jaguar"
+    elif running_version_number.startswith('10.1'):
+        running_version_name = "Puma"
+    elif running_version_number.startswith('10.0'):
+        running_version_name = "Cheetah"
+    else:
+        running_version_name = "Unknown"
 
     # Return version
-    return running_version[0]
+    return running_version_number, running_version_name
     
 def get_cpu_information():
     """
@@ -125,8 +154,8 @@ def print_results(type):
             full: Print everything that is available
     """
     
-    # Get OS X version number
-    osx_version_number = get_osx_version()
+    # Get OS X version info
+    osx_version_number, osx_version_name = get_osx_version()
     
     # Get hostname
     hostname = get_hostname()
@@ -147,7 +176,7 @@ def print_results(type):
     print "========================================"
     print "System:"
     system_table = [
-        ["OS X Version", osx_version_number],
+        ["OS X Version", "{} ({})".format(osx_version_number, osx_version_name)],
         ["Hostname", hostname],
         ["Kernel UUID", kernel_uuid],
         ["Hardware UUID", hardware_uuid]

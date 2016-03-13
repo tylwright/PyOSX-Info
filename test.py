@@ -10,25 +10,45 @@ class VersionTest(unittest.TestCase):
     Tests the get_osx_version function
     """
     
-    def test_osx_version_type(self):
+    def test_osx_version_number_type(self):
         """
-        Tests the get_osx_version function
+        Tests the get_osx_version function for running_version_number
         """
         
-        osx_version_number = get_osx_version()
+        running_version_number, running_version_name = get_osx_version()
         
         # Check to make sure the returned valued is a string
-        self.assertEqual(type(osx_version_number), str)
+        self.assertEqual(type(running_version_number), str)
     
-    def test_osx_version_value(self):
+    def test_osx_version_number_value(self):
         """
-        Tests the get_osx_version function
+        Tests the get_osx_version function for running_version_number
         """
         
-        osx_version_number = get_osx_version()
+        running_version_number, running_version_name = get_osx_version()
         
         # Check to make sure the returned valued is 10.11.1
-        self.assertEqual(osx_version_number, '10.11.1')
+        self.assertEqual(running_version_number, '10.11.1')
+        
+    def test_osx_version_name_type(self):
+        """
+        Tests the get_osx_version function for running_version_name
+        """
+        
+        running_version_number, running_version_name = get_osx_version()
+        
+        # Check to make sure the returned valued is a string
+        self.assertEqual(type(running_version_name), str)
+    
+    def test_osx_version_name_value(self):
+        """
+        Tests the get_osx_version function for running_version_name
+        """
+        
+        running_version_number, running_version_name = get_osx_version()
+        
+        # Check to make sure the returned valued is 10.11.1
+        self.assertEqual(running_version_name, 'El Capitan')
 
 class CPUTest(unittest.TestCase):
     """
