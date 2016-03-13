@@ -30,7 +30,7 @@ class VersionTest(unittest.TestCase):
         # Check to make sure the returned valued is 10.11.1
         self.assertEqual(osx_version_number, '10.11.1')
 
-class CpuTest(unittest.TestCase):
+class CPUTest(unittest.TestCase):
     """
     Tests the get_cpu_information function
     """
@@ -114,6 +114,31 @@ class CpuTest(unittest.TestCase):
         
         # Check to make sure the returned value is a string
         self.assertEqual(type(cpu_model), str)
+        
+class RAMTest(unittest.TestCase):
+    """
+    Tests the get_ram_information function
+    """
+
+    def test_ram_total_value(self):
+        """
+        Tests the get_ram_information function for ram_total
+        """
+        
+        ram_total = get_ram_information()
+        
+        # Check to make sure the total amount of RAM is 32G
+        self.assertEqual(ram_total, '32G')
+    
+    def test_ram_total_type(self):
+        """
+        Tests the get_ram_information function for ram_total
+        """
+        
+        ram_total = get_ram_information()
+        
+        # Check to make sure the returned value is a string
+        self.assertEqual(type(ram_total), str)
         
 if __name__ == '__main__':
     unittest.main(verbosity=2)
