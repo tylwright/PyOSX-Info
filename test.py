@@ -15,7 +15,7 @@ class VersionTest(unittest.TestCase):
         Tests the get_osx_version function for running_version_number
         """
         
-        running_version_number, running_version_name = get_osx_version()
+        running_version_number = get_osx_version()[0]
         
         # Check to make sure the returned valued is a string
         self.assertEqual(type(running_version_number), str)
@@ -25,7 +25,7 @@ class VersionTest(unittest.TestCase):
         Tests the get_osx_version function for running_version_number
         """
         
-        running_version_number, running_version_name = get_osx_version()
+        running_version_number = get_osx_version()[0]
         
         # Check to make sure the returned valued is 10.11.1
         self.assertEqual(running_version_number, '10.11.1')
@@ -35,7 +35,7 @@ class VersionTest(unittest.TestCase):
         Tests the get_osx_version function for running_version_name
         """
         
-        running_version_number, running_version_name = get_osx_version()
+        running_version_name = get_osx_version()[1]
         
         # Check to make sure the returned valued is a string
         self.assertEqual(type(running_version_name), str)
@@ -45,7 +45,7 @@ class VersionTest(unittest.TestCase):
         Tests the get_osx_version function for running_version_name
         """
         
-        running_version_number, running_version_name = get_osx_version()
+        running_version_name = get_osx_version()[1]
         
         # Check to make sure the returned valued is 10.11.1
         self.assertEqual(running_version_name, 'El Capitan')
@@ -60,7 +60,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_physical_cores
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        cpu_physical_cores = get_cpu_information()[2]
         
         # Check to make sure the number of physical cores is 4
         self.assertEqual(cpu_physical_cores, 4)
@@ -70,7 +70,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_physical_cores
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        cpu_physical_cores = get_cpu_information()[2]
         
         # Check to make sure the returned value is an int
         self.assertEqual(type(cpu_physical_cores), int)
@@ -80,7 +80,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_logical_cores
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        cpu_logical_cores = get_cpu_information()[3]
         
         # Check to make sure the number of logical cores is 8
         self.assertEqual(cpu_logical_cores, 8)
@@ -90,7 +90,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_logical_cores
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        cpu_logical_cores = get_cpu_information()[3]
         
         # Check to make sure the returned value is an int
         self.assertEqual(type(cpu_logical_cores), int)
@@ -100,7 +100,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_architecture
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        cpu_architecture = get_cpu_information()[0]
         
         # Check to make sure the returned value is "x86_64"
         self.assertEqual(cpu_architecture, 'x86_64')
@@ -110,7 +110,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_architecture
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        cpu_architecture = get_cpu_information()[0]
         
         # Check to make sure the returned value is a string
         self.assertEqual(type(cpu_architecture), str)
@@ -120,7 +120,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_model
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        cpu_model = get_cpu_information()[1]
         
         # Check to make sure the returned value is "Intel(R) Core(TM) i7-4771 CPU @ 3.50GHz"
         self.assertEqual(cpu_model, 'Intel(R) Core(TM) i7-4771 CPU @ 3.50GHz')
@@ -130,7 +130,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_model
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        cpu_model = get_cpu_information()[1]
         
         # Check to make sure the returned value is a string
         self.assertEqual(type(cpu_model), str)
@@ -140,7 +140,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_processor_count
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        cpu_processor_count = get_cpu_information()[4]        
         
         # Check to make sure the returned value is "Intel(R) Core(TM) i7-4771 CPU @ 3.50GHz"
         self.assertEqual(cpu_processor_count, 1)
@@ -150,7 +150,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_processor_count
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        cpu_processor_count = get_cpu_information()[4]
         
         # Check to make sure the returned value is a string
         self.assertEqual(type(cpu_processor_count), int)
@@ -165,7 +165,7 @@ class RAMTest(unittest.TestCase):
         Tests the get_ram_information function for ram_total
         """
         
-        ram_total, swap_total = get_ram_information()
+        ram_total = get_ram_information()[0]
         
         # Check to make sure the total amount of RAM is 32G
         self.assertEqual(ram_total, '32G')
@@ -175,7 +175,7 @@ class RAMTest(unittest.TestCase):
         Tests the get_ram_information function for ram_total
         """
         
-        ram_total, swap_total = get_ram_information()
+        ram_total = get_ram_information()[0]
         
         # Check to make sure the returned value is a string
         self.assertEqual(type(ram_total), str)
@@ -185,7 +185,7 @@ class RAMTest(unittest.TestCase):
         Tests the get_ram_information function for swap_total
         """
         
-        ram_total, swap_total = get_ram_information()
+        swap_total = get_ram_information()[1]
         
         # Check to make sure the total amount of RAM is 2G
         self.assertEqual(swap_total, '2G')
@@ -195,7 +195,7 @@ class RAMTest(unittest.TestCase):
         Tests the get_ram_information function for swap_total
         """
         
-        ram_total, swap_total = get_ram_information()
+        swap_total = get_ram_information()[1]
         
         # Check to make sure the returned value is a string
         self.assertEqual(type(swap_total), str)
@@ -235,7 +235,7 @@ class UUIDTest(unittest.TestCase):
         Tests the get_uuid function for kernel_uuid
         """
         
-        kernel_uuid, hardware_uuid = get_uuids()
+        kernel_uuid = get_uuids()[0]
         
         # Check to make sure it contains "-"
         # Exact matching is not done on purpose - UUIDs should be kept private!
@@ -246,7 +246,7 @@ class UUIDTest(unittest.TestCase):
         Tests the get_uuid function for kernel_uuid
         """
         
-        kernel_uuid, hardware_uuid = get_uuids()
+        kernel_uuid = get_uuids()[0]
         
         # Check to make sure the returned value is a string
         self.assertEqual(type(kernel_uuid), str)
@@ -256,7 +256,7 @@ class UUIDTest(unittest.TestCase):
         Tests the get_uuid function for hardware_uuid
         """
         
-        kernel_uuid, hardware_uuid = get_uuids()
+        hardware_uuid = get_uuids()[1]
         
         # Check to make sure it contains "-"
         # Exact matching is not done on purpose - UUIDs should be kept private!
@@ -267,7 +267,7 @@ class UUIDTest(unittest.TestCase):
         Tests the get_uuid function for hardware_uuid
         """
         
-        kernel_uuid, hardware_uuid = get_uuids()
+        hardware_uuid = get_uuids()[1]
         
         # Check to make sure the returned value is a string
         self.assertEqual(type(hardware_uuid), str)
