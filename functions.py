@@ -214,39 +214,44 @@ def print_results(type):
     ram_total, swap_total = get_ram_information()
     
     # Print results
-    print "\nSystem:"
-    system_table = [
-        ["OS X Version", "{} ({})".format(osx_version_number, osx_version_name)],
-        ["Hostname", hostname],
-        ["Model", "{} ({})".format(model_name, model_identifier)],
-        ["Serial", serial],
-    ]
-    print tabulate(system_table, tablefmt="fancy_grid")
-    print "\nUUIDs:"
-    uuid_table = [
-        ["Kernel UUID", kernel_uuid],
-        ["Hardware UUID", hardware_uuid]
-    ]
-    print tabulate(uuid_table, tablefmt="fancy_grid")
-    print "\nSystem Clocks:"
-    clocks_table = [
-        ["Last Boot", last_boot]
-    ]
-    print tabulate(clocks_table, tablefmt="fancy_grid")
-    print "\nCPU Info:"
-    cpu_table = [
-        ["Model", cpu_model],
-        ["Architecture", cpu_architecture],
-        ["Total Processors", cpu_processor_count],
-        ["Physical Cores", cpu_physical_cores],
-        ["Logical Cores", cpu_logical_cores]
-    ]
-    print tabulate(cpu_table, tablefmt="fancy_grid")
-    print "\nRAM Info:"
-    ram_table = [
-        ["Total RAM", ram_total],
-        ["Total swap", swap_total]
-    ]
-    print tabulate(ram_table, tablefmt="fancy_grid")
+    if type == 'full' or type == 'system':
+        print "\nSystem:"
+        system_table = [
+            ["OS X Version", "{} ({})".format(osx_version_number, osx_version_name)],
+            ["Hostname", hostname],
+            ["Model", "{} ({})".format(model_name, model_identifier)],
+            ["Serial", serial],
+        ]
+        print tabulate(system_table, tablefmt="fancy_grid")
+    if type == 'full' or type == 'uuid' or type == 'uuids':
+        print "\nUUIDs:"
+        uuid_table = [
+            ["Kernel UUID", kernel_uuid],
+            ["Hardware UUID", hardware_uuid]
+        ]
+        print tabulate(uuid_table, tablefmt="fancy_grid")
+    if type == 'full' or type == 'clocks':
+        print "\nSystem Clocks:"
+        clocks_table = [
+            ["Last Boot", last_boot]
+        ]
+        print tabulate(clocks_table, tablefmt="fancy_grid")
+    if type == 'full' or type == 'cpu':
+        print "\nCPU Info:"
+        cpu_table = [
+            ["Model", cpu_model],
+            ["Architecture", cpu_architecture],
+            ["Total Processors", cpu_processor_count],
+            ["Physical Cores", cpu_physical_cores],
+            ["Logical Cores", cpu_logical_cores]
+        ]
+        print tabulate(cpu_table, tablefmt="fancy_grid")
+    if type == 'full' or type == 'ram':
+        print "\nRAM Info:"
+        ram_table = [
+            ["Total RAM", ram_total],
+            ["Total swap", swap_total]
+        ]
+        print tabulate(ram_table, tablefmt="fancy_grid")
     #print tabulate(cpu_table, tablefmt="html") # Future web interface?
     print ""
