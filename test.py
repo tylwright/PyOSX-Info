@@ -60,7 +60,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_physical_cores
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
+        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
         
         # Check to make sure the number of physical cores is 4
         self.assertEqual(cpu_physical_cores, 4)
@@ -70,7 +70,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_physical_cores
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
+        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
         
         # Check to make sure the returned value is an int
         self.assertEqual(type(cpu_physical_cores), int)
@@ -80,7 +80,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_logical_cores
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
+        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
         
         # Check to make sure the number of logical cores is 8
         self.assertEqual(cpu_logical_cores, 8)
@@ -90,7 +90,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_logical_cores
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
+        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
         
         # Check to make sure the returned value is an int
         self.assertEqual(type(cpu_logical_cores), int)
@@ -100,7 +100,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_architecture
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
+        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
         
         # Check to make sure the returned value is "x86_64"
         self.assertEqual(cpu_architecture, 'x86_64')
@@ -110,7 +110,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_architecture
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
+        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
         
         # Check to make sure the returned value is a string
         self.assertEqual(type(cpu_architecture), str)
@@ -120,7 +120,7 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_model
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
+        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
         
         # Check to make sure the returned value is "Intel(R) Core(TM) i7-4771 CPU @ 3.50GHz"
         self.assertEqual(cpu_model, 'Intel(R) Core(TM) i7-4771 CPU @ 3.50GHz')
@@ -130,10 +130,30 @@ class CPUTest(unittest.TestCase):
         Tests the get_cpu_information function for cpu_model
         """
         
-        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
+        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
         
         # Check to make sure the returned value is a string
         self.assertEqual(type(cpu_model), str)
+        
+    def test_cpu_processor_count_value(self):
+        """
+        Tests the get_cpu_information function for cpu_processor_count
+        """
+        
+        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        
+        # Check to make sure the returned value is "Intel(R) Core(TM) i7-4771 CPU @ 3.50GHz"
+        self.assertEqual(cpu_processor_count, 1)
+        
+    def test_cpu_processor_count_type(self):
+        """
+        Tests the get_cpu_information function for cpu_processor_count
+        """
+        
+        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        
+        # Check to make sure the returned value is a string
+        self.assertEqual(type(cpu_processor_count), int)
         
 class RAMTest(unittest.TestCase):
     """

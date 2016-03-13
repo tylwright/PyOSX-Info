@@ -65,6 +65,7 @@ def get_cpu_information():
         cpu_model [string]: CPU model (ex. Intel Core i7 CPU @ 3.50GHz)
         cpu_physical_cores[int]: Number of physical cores
         cpu_logical_cores [int]: Number of logical cores
+        cpu_processor_count[int]: Number of processors installed
     """
     
     # Get CPU architecture
@@ -79,8 +80,11 @@ def get_cpu_information():
     # Get number of logical cores that the system has
     cpu_logical_cores = int(os.popen('sysctl hw.logicalcpu').read().rstrip().translate(None, 'hw.logicalcpu: '))
     
+    # Get number of processors installed
+    cpu_processor_count = int(os.popen('system_profiler SPHardwareDataType | grep "Number of Processors:"').read().rstrip().translate(None, 'Number of Processors: '))
+    
     # Return CPU info
-    return cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores
+    return cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count
     
 def get_ram_information():
     """
@@ -144,7 +148,7 @@ def get_clocks():
     last_boot = os.popen('sysctl kern.boottime').read().rstrip()
     last_boot = last_boot.split(' } ')[1]
     
-    return last_boot
+    return last_boot 
   
 def print_results(type):
     """
@@ -167,7 +171,7 @@ def print_results(type):
     last_boot = get_clocks()
     
     # Get CPU info
-    cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
+    cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
     
     # Get RAM info
     ram_total, swap_total = get_ram_information()
@@ -182,15 +186,16 @@ def print_results(type):
         ["Hardware UUID", hardware_uuid]
     ]
     print tabulate(system_table, tablefmt="fancy_grid")
-    print "System Clocks:"
+    print "\nSystem Clocks:"
     clocks_table = [
         ["Last Boot", last_boot]
     ]
     print tabulate(clocks_table, tablefmt="fancy_grid")
-    print "CPU Info:"
+    print "\nCPU Info:"
     cpu_table = [
         ["Model", cpu_model],
         ["Architecture", cpu_architecture],
+        ["Total Processors", cpu_processor_count],
         ["Physical Cores", cpu_physical_cores],
         ["Logical Cores", cpu_logical_cores]
     ]
