@@ -164,6 +164,23 @@ def get_serial():
     # Return serial
     return serial
   
+def get_model():
+    """
+    Detects the model of the system
+    Returns:
+        model_name [string]: Model name of system
+        model_identifier [string]: Model identifier of system
+    """
+    
+    # Get model name
+    model_name = os.popen('system_profiler SPHardwareDataType | grep "Model Name:"').read().rstrip().replace('Model Name: ', '').replace(' ','')
+    
+    # Get model identifier
+    model_identifier = os.popen('system_profiler SPHardwareDataType | grep "Model Identifier:"').read().rstrip().replace('Model Identifier: ', '').replace(' ','')
+    
+    # Return model info
+    return model_name, model_identifier
+  
 def print_results(type):
     """
     Prints system information
@@ -184,6 +201,9 @@ def print_results(type):
     # Get serial
     serial = get_serial()
     
+    # Get model info
+    model_name, model_identifier = get_model()
+    
     # Get Clocks
     last_boot = get_clocks()
     
@@ -194,11 +214,11 @@ def print_results(type):
     ram_total, swap_total = get_ram_information()
     
     # Print results
-    print "========================================"
-    print "System:"
+    print "\nSystem:"
     system_table = [
         ["OS X Version", "{} ({})".format(osx_version_number, osx_version_name)],
         ["Hostname", hostname],
+        ["Model", "{} ({})".format(model_name, model_identifier)],
         ["Serial", serial],
         ["Kernel UUID", kernel_uuid],
         ["Hardware UUID", hardware_uuid]
@@ -225,3 +245,4 @@ def print_results(type):
     ]
     print tabulate(ram_table, tablefmt="fancy_grid")
     #print tabulate(cpu_table, tablefmt="html") # Future web interface?
+    print ""

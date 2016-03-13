@@ -319,7 +319,52 @@ class SerialTest(unittest.TestCase):
         serial = get_serial()
         
         # Check to make sure the returned value is a string
-        self.assertEqual(type(serial), str)        
+        self.assertEqual(type(serial), str)
+        
+class ModelTest(unittest.TestCase):
+    """
+    Tests the get_model function
+    """
+    
+    def test_model_name_value(self):
+        """
+        Tests the get_model function for model_name
+        """
+        
+        model_name = get_model()[0]
+        
+        # Check to make sure the model_name is 'iMac'
+        self.assertEqual(model_name, 'iMac')
+        
+    def test_model_name_type(self):
+        """
+        Tests the get_model function for model_name
+        """
+        
+        model_name = get_model()[0]
+        
+        # Check to make sure the returned value is a string
+        self.assertEqual(type(model_name), str)
+        
+    def test_model_identifier_value(self):
+        """
+        Tests the get_model function for model__identifier
+        """
+        
+        model_identifier = get_model()[1]
+        
+        # Check to make sure the model_name is 'iMac14,2'
+        self.assertEqual(model_identifier, 'iMac14,2')
+        
+    def test_model__identifier_type(self):
+        """
+        Tests the get_model function for model__identifier
+        """
+        
+        model_identifier = get_model()[1]
+        
+        # Check to make sure the returned value is a string
+        self.assertEqual(type(model_identifier), str) 
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
