@@ -220,10 +220,14 @@ def print_results(type):
         ["Hostname", hostname],
         ["Model", "{} ({})".format(model_name, model_identifier)],
         ["Serial", serial],
+    ]
+    print tabulate(system_table, tablefmt="fancy_grid")
+    print "\nUUIDs:"
+    uuid_table = [
         ["Kernel UUID", kernel_uuid],
         ["Hardware UUID", hardware_uuid]
     ]
-    print tabulate(system_table, tablefmt="fancy_grid")
+    print tabulate(uuid_table, tablefmt="fancy_grid")
     print "\nSystem Clocks:"
     clocks_table = [
         ["Last Boot", last_boot]
