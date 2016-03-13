@@ -181,6 +181,32 @@ def get_model():
     # Return model info
     return model_name, model_identifier
   
+def get_smc_version():
+    """
+    Detects the version of SMC
+    Returns:
+        smv_version [string]: Version of SMC
+    """
+    
+    # Get SMC version
+    smc_version = os.popen('system_profiler SPHardwareDataType | grep "SMC Version"').read().rstrip().replace('SMC Version (system): ', '').replace(' ','')
+  
+    # Return SMC info
+    return smc_version
+    
+def get_boot_rom_version():
+    """
+    Detects the boot ROM version
+    Returns:
+        boot_rom_version [string]: Version of boot ROM
+    """
+  
+    # Get boot ROM version
+    boot_rom_version = os.popen('system_profiler SPHardwareDataType | grep "Boot ROM"').read().rstrip().replace('Boot ROM Version: ', '').replace(' ','')
+
+    # Return boot ROM info
+    return boot_rom_version
+  
 def print_results(type):
     """
     Prints system information
@@ -204,6 +230,12 @@ def print_results(type):
     # Get model info
     model_name, model_identifier = get_model()
     
+    # Get SMC info
+    smc_version = get_smc_version()
+    
+    # Get boot ROM info
+    boot_rom_version = get_boot_rom_version()
+    
     # Get Clocks
     last_boot = get_clocks()
     
@@ -214,6 +246,7 @@ def print_results(type):
     ram_total, swap_total = get_ram_information()
     
     # Print results
+    # System Table
     if type == 'full' or type == 'system':
         print "\nSystem:"
         system_table = [
@@ -223,6 +256,8 @@ def print_results(type):
             ["Serial", serial],
         ]
         print tabulate(system_table, tablefmt="fancy_grid")
+        
+    # UUID Table
     if type == 'full' or type == 'uuid' or type == 'uuids':
         print "\nUUIDs:"
         uuid_table = [
@@ -230,12 +265,16 @@ def print_results(type):
             ["Hardware UUID", hardware_uuid]
         ]
         print tabulate(uuid_table, tablefmt="fancy_grid")
+        
+    # Clock Table
     if type == 'full' or type == 'clocks':
         print "\nSystem Clocks:"
         clocks_table = [
             ["Last Boot", last_boot]
         ]
         print tabulate(clocks_table, tablefmt="fancy_grid")
+        
+    # CPU Table
     if type == 'full' or type == 'cpu':
         print "\nCPU Info:"
         cpu_table = [
@@ -246,6 +285,8 @@ def print_results(type):
             ["Logical Cores", cpu_logical_cores]
         ]
         print tabulate(cpu_table, tablefmt="fancy_grid")
+        
+    # RAM Table
     if type == 'full' or type == 'ram':
         print "\nRAM Info:"
         ram_table = [
@@ -253,5 +294,14 @@ def print_results(type):
             ["Total swap", swap_total]
         ]
         print tabulate(ram_table, tablefmt="fancy_grid")
+        
+    # Miscellaneous Table
+    if type == 'full' or type == 'misc' or type == 'miscellaneous':
+        print "\nMiscellaneous Info:"
+        misc_table = [
+            ["SMC Version", smc_version],
+            ["Boot ROM Version", boot_rom_version]
+        ]
+        print tabulate(misc_table, tablefmt="fancy_grid")
     #print tabulate(cpu_table, tablefmt="html") # Future web interface?
     print ""

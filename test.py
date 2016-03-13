@@ -366,5 +366,56 @@ class ModelTest(unittest.TestCase):
         # Check to make sure the returned value is a string
         self.assertEqual(type(model_identifier), str) 
 
+class SMCTest(unittest.TestCase):
+    """
+    Tests the get_smc_version function
+    """
+    
+    def test_smc_version_value(self):
+        """
+        Tests the get_smc_version function
+        """
+        
+        smc_version = get_smc_version()
+        
+        # Check to make sure the smc_version is '2.15f7'
+        self.assertEqual(smc_version, '2.15f7')
+        
+    def test_smc_version_type(self):
+        """
+        Tests the get_smc_version function
+        """
+        
+        smc_version = get_smc_version()
+        
+        # Check to make sure the returned value is a string
+        self.assertEqual(type(smc_version), str)
+        
+class BootROMTest(unittest.TestCase):
+    """
+    Tests the get_boot_rom_version function
+    """
+    
+    def test_boot_rom_version_value(self):
+        """
+        Tests the get_boot_rom_version function
+        """
+        
+        boot_rom_version = get_boot_rom_version()
+        
+        # Check to make sure the boot_rom_version is 'IM142.0118.B12'
+        self.assertEqual(boot_rom_version, 'IM142.0118.B12')
+        
+    def test_boot_rom_version_type(self):
+        """
+        Tests the get_boot_rom_version function
+        """
+        
+        boot_rom_version = get_boot_rom_version()
+        
+        # Check to make sure the returned value is a string
+        self.assertEqual(type(boot_rom_version), str)
+        
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
