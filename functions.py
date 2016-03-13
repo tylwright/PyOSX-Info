@@ -79,6 +79,19 @@ def get_hostname():
     # Return hostname
     return hostname
   
+def get_uuid():
+    """
+    Detects the system's UUID
+    Returns:
+        uuid [string]: System's UUID
+    """
+    
+    # Get UUID
+    uuid = os.popen('sysctl kern.uuid').read().rstrip().translate(None, 'kern.uuid: ')
+    
+    # Return UUID
+    return uuid
+  
 def print_results(type):
     """
     Prints system information
@@ -93,6 +106,9 @@ def print_results(type):
     # Get hostname
     hostname = get_hostname()
     
+    # Get UUID
+    uuid = get_uuid()
+    
     # Get CPU info
     cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
     
@@ -103,6 +119,7 @@ def print_results(type):
     print "========================================"
     print "Mac OS X {}".format(osx_version_number)
     print "{}".format(hostname)
+    print "{}".format(uuid)
     print "========================================"
     print "CPU Info:"
     cpu_table = [

@@ -149,19 +149,47 @@ class HostnameTest(unittest.TestCase):
         """
         Tests the get_hostname function
         """
+        
         hostname = get_hostname()
         
-        # Check to the make sure the hostname is "tjw-imac.grid.labs"
+        # Check to make sure the hostname is "tjw-imac.grid.labs"
         self.assertEqual(hostname, 'tjw-imac.grid.labs')
     
     def test_hostname_type(self):
         """
         Tests the get_hostname function
         """
+        
         hostname = get_hostname()
         
-        # Check to the make sure the returned value is a string
+        # Check to make sure the returned value is a string
         self.assertEqual(type(hostname), str)
+    
+class UUIDTest(unittest.TestCase):
+    """
+    Tests the get_uuid function
+    """
+    
+    def test_uuid_value(self):
+        """
+        Tests the get_uuid function
+        """
+        
+        uuid = get_uuid()
+        
+        # Check to make sure it contains "-"
+        # Exact matching is not done on purpose - UUIDs should be kept private!
+        self.assertIn("-", uuid)
+        
+    def test_uuid_type(self):
+        """
+        Tests the get_uuid function
+        """
+        
+        uuid = get_uuid()
+        
+        # Check to make sure the returned value is a string
+        self.assertEqual(type(uuid), str)
         
 if __name__ == '__main__':
     unittest.main(verbosity=2)
