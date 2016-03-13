@@ -87,18 +87,22 @@ def get_hostname():
     # Return hostname
     return hostname
   
-def get_uuid():
+def get_uuids():
     """
-    Detects the system's UUID
+    Detects the system's UUIDs
     Returns:
-        uuid [string]: System's UUID
+        kernel_uuid [string]: UUID of kernel
+        hardware_uuid [string]: UUID of hardware
     """
     
-    # Get UUID
-    uuid = os.popen('sysctl kern.uuid').read().rstrip().translate(None, 'kern.uuid: ')
+    # Get UUID of kernel
+    kernel_uuid = os.popen('sysctl kern.uuid').read().rstrip().translate(None, 'kern.uuid: ')
+    
+    # Get UUID of hardware
+    hardware_uuid = os.popen('system_profiler SPHardwareDataType | grep "Hardware UUID:"').read().rstrip().translate(None, 'Hardware UUID: ')
     
     # Return UUID
-    return uuid
+    return kernel_uuid, hardware_uuid
     
 def get_clocks():
     """
@@ -127,8 +131,8 @@ def print_results(type):
     # Get hostname
     hostname = get_hostname()
     
-    # Get UUID
-    uuid = get_uuid()
+    # Get UUIDs
+    kernel_uuid, hardware_uuid = get_uuids()
     
     # Get Clocks
     last_boot = get_clocks()
@@ -141,10 +145,14 @@ def print_results(type):
     
     # Print results
     print "========================================"
-    print "Mac OS X {}".format(osx_version_number)
-    print "{}".format(hostname)
-    print "{}".format(uuid)
-    print "========================================"
+    print "System:"
+    system_table = [
+        ["OS X Version", osx_version_number],
+        ["Hostname", hostname],
+        ["Kernel UUID", kernel_uuid],
+        ["Hardware UUID", hardware_uuid]
+    ]
+    print tabulate(system_table, tablefmt="fancy_grid")
     print "System Clocks:"
     clocks_table = [
         ["Last Boot", last_boot]

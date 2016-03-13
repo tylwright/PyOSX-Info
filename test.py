@@ -187,29 +187,50 @@ class HostnameTest(unittest.TestCase):
     
 class UUIDTest(unittest.TestCase):
     """
-    Tests the get_uuid function
+    Tests the get_uuids function
     """
     
-    def test_uuid_value(self):
+    def test_kernel_uuid_value(self):
         """
-        Tests the get_uuid function
+        Tests the get_uuid function for kernel_uuid
         """
         
-        uuid = get_uuid()
+        kernel_uuid, hardware_uuid = get_uuids()
         
         # Check to make sure it contains "-"
         # Exact matching is not done on purpose - UUIDs should be kept private!
-        self.assertIn("-", uuid)
+        self.assertIn("-", kernel_uuid)
         
-    def test_uuid_type(self):
+    def test_kernel_uuid_type(self):
         """
-        Tests the get_uuid function
+        Tests the get_uuid function for kernel_uuid
         """
         
-        uuid = get_uuid()
+        kernel_uuid, hardware_uuid = get_uuids()
         
         # Check to make sure the returned value is a string
-        self.assertEqual(type(uuid), str)
+        self.assertEqual(type(kernel_uuid), str)
+        
+    def test_hardware_uuid_value(self):
+        """
+        Tests the get_uuid function for hardware_uuid
+        """
+        
+        kernel_uuid, hardware_uuid = get_uuids()
+        
+        # Check to make sure it contains "-"
+        # Exact matching is not done on purpose - UUIDs should be kept private!
+        self.assertIn("-", hardware_uuid)
+        
+    def test_hardware_uuid_type(self):
+        """
+        Tests the get_uuid function for hardware_uuid
+        """
+        
+        kernel_uuid, hardware_uuid = get_uuids()
+        
+        # Check to make sure the returned value is a string
+        self.assertEqual(type(hardware_uuid), str)
         
 class ClocksTest(unittest.TestCase):
     """
