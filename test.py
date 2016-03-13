@@ -5,6 +5,31 @@ import unittest2 as unittest
 # Testing on TJW-iMac
 # Testing will fail on any other hardware
 
+class VersionTest(unittest.TestCase):
+    """
+    Tests the get_osx_version function
+    """
+    
+    def test_osx_version_type(self):
+        """
+        Tests the get_osx_version function
+        """
+        
+        osx_version_number = get_osx_version()
+        
+        # Check to make sure the returned valued is a string
+        self.assertEqual(type(osx_version_number), str)
+    
+    def test_osx_version_value(self):
+        """
+        Tests the get_osx_version function
+        """
+        
+        osx_version_number = get_osx_version()
+        
+        # Check to make sure the returned valued is 10.11.1
+        self.assertEqual(osx_version_number, '10.11.1')
+
 class CpuTest(unittest.TestCase):
     """
     Tests the get_cpu_information function
