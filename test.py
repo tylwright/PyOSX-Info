@@ -295,5 +295,31 @@ class ClocksTest(unittest.TestCase):
         # Check to make sure the returned value is a string
         self.assertEqual(type(last_boot), str)
         
+class SerialTest(unittest.TestCase):
+    """
+    Tests the get_serial function
+    """
+    
+    def test_serial_value(self):
+        """
+        Tests the get_serial function
+        """
+        
+        serial = get_serial()
+        
+        # Check to make sure it is not null
+        # Exact matching is not done on purpose - serials should be kept private!
+        self.assertIsNotNone(serial)
+        
+    def test_serial_type(self):
+        """
+        Tests the get_uuid function
+        """
+        
+        serial = get_serial()
+        
+        # Check to make sure the returned value is a string
+        self.assertEqual(type(serial), str)        
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

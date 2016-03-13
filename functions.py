@@ -148,7 +148,21 @@ def get_clocks():
     last_boot = os.popen('sysctl kern.boottime').read().rstrip()
     last_boot = last_boot.split(' } ')[1]
     
+    # Return last boot
     return last_boot 
+  
+def get_serial():
+    """
+    Detects the serial number of the system
+    Returns:
+        serial [string]: Serial number of system
+    """
+    
+    # Get serial number
+    serial = os.popen('system_profiler SPHardwareDataType | grep "Serial Number"').read().rstrip().translate(None, 'Serial Number (system): ')
+    
+    # Return serial
+    return serial
   
 def print_results(type):
     """
@@ -167,6 +181,9 @@ def print_results(type):
     # Get UUIDs
     kernel_uuid, hardware_uuid = get_uuids()
     
+    # Get serial
+    serial = get_serial()
+    
     # Get Clocks
     last_boot = get_clocks()
     
@@ -182,6 +199,7 @@ def print_results(type):
     system_table = [
         ["OS X Version", "{} ({})".format(osx_version_number, osx_version_name)],
         ["Hostname", hostname],
+        ["Serial", serial],
         ["Kernel UUID", kernel_uuid],
         ["Hardware UUID", hardware_uuid]
     ]
