@@ -125,7 +125,7 @@ class RAMTest(unittest.TestCase):
         Tests the get_ram_information function for ram_total
         """
         
-        ram_total = get_ram_information()
+        ram_total, swap_total = get_ram_information()
         
         # Check to make sure the total amount of RAM is 32G
         self.assertEqual(ram_total, '32G')
@@ -135,10 +135,30 @@ class RAMTest(unittest.TestCase):
         Tests the get_ram_information function for ram_total
         """
         
-        ram_total = get_ram_information()
+        ram_total, swap_total = get_ram_information()
         
         # Check to make sure the returned value is a string
         self.assertEqual(type(ram_total), str)
+        
+    def test_swap_total_value(self):
+        """
+        Tests the get_ram_information function for swap_total
+        """
+        
+        ram_total, swap_total = get_ram_information()
+        
+        # Check to make sure the total amount of RAM is 2G
+        self.assertEqual(swap_total, '2G')
+    
+    def test_swap_total_type(self):
+        """
+        Tests the get_ram_information function for swap_total
+        """
+        
+        ram_total, swap_total = get_ram_information()
+        
+        # Check to make sure the returned value is a string
+        self.assertEqual(type(swap_total), str)
         
 class HostnameTest(unittest.TestCase):
     """

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import datetime, os, sys, platform
 from tabulate import tabulate
-from hurry.filesize import size
+from hurry.filesize import size, alternative
 
 def confirm_osx():
     """
@@ -58,13 +58,21 @@ def get_ram_information():
     Detects information about the RAM
     Returns:
         ram_total [string]: Total amount of RAM in human readable format
+        swap_total [string]: Total amount of swap available in human readable format
     """
     
     # Get total RAM (in human readable format)
     ram_total = size(int(os.popen('sysctl hw.memsize').read().rstrip().translate(None, 'hw.memsize: ')))
     
+    # Get swap
+    swap_total = os.popen('sysctl vm.swapusage').read().rstrip().replace('vm.swapusage: ', '')
+    swap_total = swap_total.split('total = ')[1]
+    swap_total = swap_total.split('  used =')[0]
+    swap_total = swap_total.split('.')[0]
+    swap_total = size(int(swap_total) * 1024 * 1024)
+    
     # Return total RAM
-    return ram_total
+    return ram_total, swap_total
     
 def get_hostname():
     """
@@ -129,7 +137,7 @@ def print_results(type):
     cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores = get_cpu_information()
     
     # Get RAM info
-    ram_total = get_ram_information()
+    ram_total, swap_total = get_ram_information()
     
     # Print results
     print "========================================"
@@ -152,7 +160,8 @@ def print_results(type):
     print tabulate(cpu_table, tablefmt="fancy_grid")
     print "\nRAM Info:"
     ram_table = [
-        ["Total RAM:", ram_total]
+        ["Total RAM", ram_total],
+        ["Total swap", swap_total]
     ]
     print tabulate(ram_table, tablefmt="fancy_grid")
     #print tabulate(cpu_table, tablefmt="html") # Future web interface?
