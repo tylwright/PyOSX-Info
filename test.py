@@ -140,5 +140,28 @@ class RAMTest(unittest.TestCase):
         # Check to make sure the returned value is a string
         self.assertEqual(type(ram_total), str)
         
+class HostnameTest(unittest.TestCase):
+    """
+    Tests the get_hostname function
+    """
+    
+    def test_hostname_value(self):
+        """
+        Tests the get_hostname function
+        """
+        hostname = get_hostname()
+        
+        # Check to the make sure the hostname is "tjw-imac.grid.labs"
+        self.assertEqual(hostname, 'tjw-imac.grid.labs')
+    
+    def test_hostname_type(self):
+        """
+        Tests the get_hostname function
+        """
+        hostname = get_hostname()
+        
+        # Check to the make sure the returned value is a string
+        self.assertEqual(type(hostname), str)
+        
 if __name__ == '__main__':
     unittest.main(verbosity=2)
