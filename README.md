@@ -1,5 +1,6 @@
 # PyOSX-Info
 A Python script used to gather information about an OS X system.
+<br>
 <img src='http://i.imgur.com/oaKybcA.png' width='400px'/>
 
 <h3>Requirements</h3>
@@ -8,14 +9,16 @@ A Python script used to gather information about an OS X system.
 <li>Python (Tested on 2.7.9)</li>
 <li>hurry.filesize (pip install hurry.filesize)</li>
 <li>tabulate (pip install tabulate)</li>
-<li>unittest2 (pip install unittest2)</li>
+<li>unittest2 (pip install unittest2)*</li>
 </ul>
 <i>* only needed if running unit tests</i>
 
 <h3>Running the Script</h3>
-Simply run:
 ```
 python pyosx.py <type>
+```
+For example:
+```
 python pyosx.py full
 python pyosx.py system
 ```
