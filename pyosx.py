@@ -11,4 +11,4 @@ parser.add_argument('type', type=str, help='Type of results to display: full, sy
 args = parser.parse_args()
 
 # Print results
-print_results(args.type)
+print_results(args.type.lower())
