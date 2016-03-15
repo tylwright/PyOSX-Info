@@ -1,4 +1,4 @@
-# PyOSX-Info
+# PyOSX-Info v0.1
 A Python script used to gather information about an OS X system.
 <br>
 <img src='http://i.imgur.com/oaKybcA.png' width='400px'/>
