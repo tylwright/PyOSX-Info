@@ -51,6 +51,7 @@ python pyosx.py system
 <ul>
 <li>Kernel UUID</li>
 <li>Hardware UUID</li>
+<li>Boot Session UUID</li>
 </ul>
 </td>
 </tr>

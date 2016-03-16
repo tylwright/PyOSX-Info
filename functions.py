@@ -126,6 +126,7 @@ def get_uuids():
     Returns:
         kernel_uuid [string]: UUID of kernel
         hardware_uuid [string]: UUID of hardware
+        boot_session_uuid [string]: UUID of boot session
     """
     
     # Get UUID of kernel
@@ -134,8 +135,11 @@ def get_uuids():
     # Get UUID of hardware
     hardware_uuid = os.popen('system_profiler SPHardwareDataType | grep "Hardware UUID:"').read().rstrip().translate(None, 'Hardware UUID: ')
     
+    # Get UUID of boot session
+    boot_session_uuid = os.popen('sysctl kern.bootsessionuuid').read().rstrip().translate(None, 'kern.kern.bootsessionuuid: ')
+    
     # Return UUID
-    return kernel_uuid, hardware_uuid
+    return kernel_uuid, hardware_uuid, boot_session_uuid
     
 def get_clocks():
     """
@@ -222,7 +226,7 @@ def print_results(type):
     hostname = get_hostname()
     
     # Get UUIDs
-    kernel_uuid, hardware_uuid = get_uuids()
+    kernel_uuid, hardware_uuid, boot_session_uuid = get_uuids()
     
     # Get serial
     serial = get_serial()
@@ -262,7 +266,8 @@ def print_results(type):
         print "\nUUIDs:"
         uuid_table = [
             ["Kernel UUID", kernel_uuid],
-            ["Hardware UUID", hardware_uuid]
+            ["Hardware UUID", hardware_uuid],
+            ["Boot Session UUID", boot_session_uuid]
         ]
         print tabulate(uuid_table, tablefmt="fancy_grid")
         
