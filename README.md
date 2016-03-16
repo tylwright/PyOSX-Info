@@ -94,3 +94,9 @@ python pyosx.py system
 </td>
 </tr>
 </table>
+
+<h3>Latest Updates</h3>
+New in v0.2:
+<ul>
+<li>Boot Session UUID</li>
+</ul>
