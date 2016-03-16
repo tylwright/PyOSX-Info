@@ -219,37 +219,36 @@ def print_results(type):
             full: Print everything that is available
     """
     
-    # Get OS X version info
-    osx_version_number, osx_version_name = get_osx_version()
-    
-    # Get hostname
-    hostname = get_hostname()
-    
-    # Get UUIDs
-    kernel_uuid, hardware_uuid, boot_session_uuid = get_uuids()
-    
-    # Get serial
-    serial = get_serial()
-    
-    # Get model info
-    model_name, model_identifier = get_model()
-    
-    # Get SMC info
-    smc_version = get_smc_version()
-    
-    # Get boot ROM info
-    boot_rom_version = get_boot_rom_version()
-    
-    # Get Clocks
-    last_boot = get_clocks()
-    
-    # Get CPU info
-    cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
-    
-    # Get RAM info
-    ram_total, swap_total = get_ram_information()
-    
-    # Print results
+    ## Gather data
+    # System Data
+    if type == 'full' or type == 'system':
+        model_name, model_identifier = get_model()
+        serial = get_serial()
+        hostname = get_hostname()
+        osx_version_number, osx_version_name = get_osx_version()
+        
+    # UUID Data
+    if type == 'full' or type == 'uuid' or type == 'uuids':
+        kernel_uuid, hardware_uuid, boot_session_uuid = get_uuids()
+        
+    # Clock Data
+    if type == 'full' or type == 'clocks':
+        last_boot = get_clocks()
+        
+    # CPU Data
+    if type == 'full' or type == 'cpu':
+        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        
+    # RAM Data
+    if type == 'full' or type == 'ram':
+        ram_total, swap_total = get_ram_information()
+        
+    # Miscellaneous Data
+    if type == 'full' or type == 'misc' or type == 'miscellaneous':
+        boot_rom_version = get_boot_rom_version()
+        smc_version = get_smc_version()
+        
+    ## Print results
     # System Table
     if type == 'full' or type == 'system':
         print "\nSystem:"
