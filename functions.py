@@ -82,7 +82,7 @@ def get_cpu_information():
     cpu_logical_cores = int(os.popen('sysctl hw.logicalcpu').read().rstrip().translate(None, 'hw.logicalcpu: '))
     
     # Get number of processors installed
-    cpu_processor_count = int(os.popen('system_profiler SPHardwareDataType | grep "Number of Processors:"').read().rstrip().translate(None, 'Number of Processors: '))
+    cpu_processor_count = int(get_system_profiler_data('SPHardwareDataType', 'mini', 'Number of Processors: '))
     
     # Return CPU info
     return cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count
@@ -134,7 +134,7 @@ def get_uuids():
     kernel_uuid = os.popen('sysctl kern.uuid').read().rstrip().translate(None, 'kern.uuid: ')
     
     # Get UUID of hardware
-    hardware_uuid = os.popen('system_profiler SPHardwareDataType | grep "Hardware UUID:"').read().rstrip().translate(None, 'Hardware UUID: ')
+    hardware_uuid = get_system_profiler_data('SPHardwareDataType', 'basic', 'Hardware UUID: ')
     
     # Get UUID of boot session
     boot_session_uuid = os.popen('sysctl kern.bootsessionuuid').read().rstrip().translate(None, 'kern.kern.bootsessionuuid: ')
@@ -164,7 +164,7 @@ def get_serial():
     """
     
     # Get serial number
-    serial = os.popen('system_profiler SPHardwareDataType | grep "Serial Number"').read().rstrip().translate(None, 'Serial Number (system): ')
+    serial = get_system_profiler_data('SPHardwareDataType', 'basic', 'Serial Number (system): ')
     
     # Return serial
     return serial
@@ -178,10 +178,10 @@ def get_model():
     """
     
     # Get model name
-    model_name = os.popen('system_profiler SPHardwareDataType | grep "Model Name:"').read().rstrip().replace('Model Name: ', '').replace(' ','')
+    model_name = get_system_profiler_data('SPHardwareDataType', 'mini', 'Model Name: ')
     
     # Get model identifier
-    model_identifier = os.popen('system_profiler SPHardwareDataType | grep "Model Identifier:"').read().rstrip().replace('Model Identifier: ', '').replace(' ','')
+    model_identifier = get_system_profiler_data('SPHardwareDataType', 'mini', 'Model Identifier: ')
     
     # Return model info
     return model_name, model_identifier
@@ -194,7 +194,7 @@ def get_smc_version():
     """
     
     # Get SMC version
-    smc_version = os.popen('system_profiler SPHardwareDataType | grep "SMC Version"').read().rstrip().replace('SMC Version (system): ', '').replace(' ','')
+    smc_version = get_system_profiler_data('SPHardwareDataType', 'mini', 'SMC Version (system): ')
   
     # Return SMC info
     return smc_version
@@ -207,7 +207,7 @@ def get_boot_rom_version():
     """
   
     # Get boot ROM version
-    boot_rom_version = os.popen('system_profiler SPHardwareDataType | grep "Boot ROM"').read().rstrip().replace('Boot ROM Version: ', '').replace(' ','')
+    boot_rom_version = get_system_profiler_data('SPHardwareDataType', 'mini', 'Boot ROM Version: ')
 
     # Return boot ROM info
     return boot_rom_version
@@ -230,7 +230,7 @@ def get_bluetooth():
         """
         # Gather a list of devices that are paired to this computer via Bluetooth
         # (whether they are currently connected or not)
-        paired_devices_list = os.popen('system_profiler SPBluetoothDataType -detailLevel mini | grep "Minor Type:"').read().rstrip().replace('Minor Type:', '').replace(' ','')
+        paired_devices_list = get_system_profiler_data('SPBluetoothDataType', 'mini', 'Minor Type: ')
         
         # Count the occurrence of each type of device
         paired_devices_count = Counter(paired_devices_list.split())
@@ -248,13 +248,27 @@ def get_bluetooth():
         return paired_devices_summary
         
     # Get version of Bluetooth
-    bluetooth_version = os.popen('system_profiler SPBluetoothDataType -detailLevel mini | grep "Apple Bluetooth Software Version:"').read().rstrip().replace('Apple Bluetooth Software Version:', '').replace(' ','')
+    bluetooth_version = get_system_profiler_data('SPBluetoothDataType', 'mini', 'Apple Bluetooth Software Version: ')
     
     # Get list of paired device types and their number of occurrences
     paired_devices_summary = get_paired_bluetooth_devices()
     
     # Return the Bluetooth info
     return paired_devices_summary, bluetooth_version
+  
+def get_system_profiler_data(classType, detail, line):
+    """
+    Can be used to gather information from the system_profiler command line tool
+    Parameters:
+        classType [string]: Part type (ex. SPBluetoothDataType)
+        detail [string]: Level of detail requested (ex. mini, basic, or full)
+        line [string]: What the line that you want starts with (ex. "Minor Type: ")
+    Returns:
+        result [string]: Output of the system_profiler command
+    """
+    command = ("system_profiler {} -detailLevel {} | grep '{}'").format(classType, detail, line)
+    result = os.popen(command).read().rstrip().replace(line, '').replace(' ','')
+    return result
   
 def print_results(type):
     """
