@@ -187,8 +187,8 @@ class RAMTest(unittest.TestCase):
         
         swap_total = get_ram_information()[1]
         
-        # Check to make sure the total amount of RAM is 2G
-        self.assertEqual(swap_total, '2G')
+        # Check to make sure the total amount of swap is is something "G"
+        self.assertIn('G', swap_total)
     
     def test_swap_total_type(self):
         """
@@ -271,6 +271,27 @@ class UUIDTest(unittest.TestCase):
         
         # Check to make sure the returned value is a string
         self.assertEqual(type(hardware_uuid), str)
+        
+    def test_boot_session_uuid_value(self):
+        """
+        Tests the get_uuid function for boot_session_uuid
+        """
+        
+        boot_session_uuid = get_uuids()[2]
+        
+        # Check to make sure it contains "-"
+        # Exact matching is not done on purpose - UUIDs should be kept private!
+        self.assertIn("-", boot_session_uuid)
+        
+    def test_hardware_uuid_type(self):
+        """
+        Tests the get_uuid function for boot_session_uuid
+        """
+        
+        boot_session_uuid = get_uuids()[2]
+        
+        # Check to make sure the returned value is a string
+        self.assertEqual(type(boot_session_uuid), str)
         
 class ClocksTest(unittest.TestCase):
     """

@@ -2,6 +2,7 @@
 import datetime, os, sys, platform
 from tabulate import tabulate
 from hurry.filesize import size, alternative
+from collections import Counter
 
 def confirm_osx():
     """
@@ -72,16 +73,16 @@ def get_cpu_information():
     cpu_architecture = platform.machine()
     
     # Get CPU model
-    cpu_model = os.popen('sysctl -n machdep.cpu.brand_string').read().rstrip()
+    cpu_model = get_sysctl_data('machdep.cpu.brand_string')
     
     # Get number of physical cores that the system has
-    cpu_physical_cores = int(os.popen('sysctl hw.physicalcpu').read().rstrip().translate(None, 'hw.physicalcpu: '))
+    cpu_physical_cores = int(get_sysctl_data('hw.physicalcpu'))
     
     # Get number of logical cores that the system has
-    cpu_logical_cores = int(os.popen('sysctl hw.logicalcpu').read().rstrip().translate(None, 'hw.logicalcpu: '))
+    cpu_logical_cores = int(get_sysctl_data('hw.logicalcpu'))
     
     # Get number of processors installed
-    cpu_processor_count = int(os.popen('system_profiler SPHardwareDataType | grep "Number of Processors:"').read().rstrip().translate(None, 'Number of Processors: '))
+    cpu_processor_count = int(get_system_profiler_data('SPHardwareDataType', 'mini', 'Number of Processors: '))
     
     # Return CPU info
     return cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count
@@ -95,10 +96,10 @@ def get_ram_information():
     """
     
     # Get total RAM (in human readable format)
-    ram_total = size(int(os.popen('sysctl hw.memsize').read().rstrip().translate(None, 'hw.memsize: ')))
+    ram_total = size(int(get_sysctl_data('hw.memsize')))
     
     # Get swap
-    swap_total = os.popen('sysctl vm.swapusage').read().rstrip().replace('vm.swapusage: ', '')
+    swap_total = get_sysctl_data('vm.swapusage')
     swap_total = swap_total.split('total = ')[1]
     swap_total = swap_total.split('  used =')[0]
     swap_total = swap_total.split('.')[0]
@@ -115,7 +116,7 @@ def get_hostname():
     """
     
     # Get hostname
-    hostname = os.popen('sysctl kern.hostname').read().rstrip().replace('kern.hostname: ', '')
+    hostname = get_sysctl_data('kern.hostname')
     
     # Return hostname
     return hostname
@@ -126,16 +127,20 @@ def get_uuids():
     Returns:
         kernel_uuid [string]: UUID of kernel
         hardware_uuid [string]: UUID of hardware
+        boot_session_uuid [string]: UUID of boot session
     """
     
     # Get UUID of kernel
-    kernel_uuid = os.popen('sysctl kern.uuid').read().rstrip().translate(None, 'kern.uuid: ')
+    kernel_uuid = get_sysctl_data('kern.uuid')
     
     # Get UUID of hardware
-    hardware_uuid = os.popen('system_profiler SPHardwareDataType | grep "Hardware UUID:"').read().rstrip().translate(None, 'Hardware UUID: ')
+    hardware_uuid = get_system_profiler_data('SPHardwareDataType', 'basic', 'Hardware UUID: ')
+    
+    # Get UUID of boot session
+    boot_session_uuid = get_sysctl_data('kern.bootsessionuuid')
     
     # Return UUID
-    return kernel_uuid, hardware_uuid
+    return kernel_uuid, hardware_uuid, boot_session_uuid
     
 def get_clocks():
     """
@@ -145,7 +150,7 @@ def get_clocks():
     """
     
     # Get Uptime
-    last_boot = os.popen('sysctl kern.boottime').read().rstrip()
+    last_boot = get_sysctl_data('kern.boottime')
     last_boot = last_boot.split(' } ')[1]
     
     # Return last boot
@@ -159,7 +164,7 @@ def get_serial():
     """
     
     # Get serial number
-    serial = os.popen('system_profiler SPHardwareDataType | grep "Serial Number"').read().rstrip().translate(None, 'Serial Number (system): ')
+    serial = get_system_profiler_data('SPHardwareDataType', 'basic', 'Serial Number (system): ')
     
     # Return serial
     return serial
@@ -173,10 +178,10 @@ def get_model():
     """
     
     # Get model name
-    model_name = os.popen('system_profiler SPHardwareDataType | grep "Model Name:"').read().rstrip().replace('Model Name: ', '').replace(' ','')
+    model_name = get_system_profiler_data('SPHardwareDataType', 'mini', 'Model Name: ')
     
     # Get model identifier
-    model_identifier = os.popen('system_profiler SPHardwareDataType | grep "Model Identifier:"').read().rstrip().replace('Model Identifier: ', '').replace(' ','')
+    model_identifier = get_system_profiler_data('SPHardwareDataType', 'mini', 'Model Identifier: ')
     
     # Return model info
     return model_name, model_identifier
@@ -189,7 +194,7 @@ def get_smc_version():
     """
     
     # Get SMC version
-    smc_version = os.popen('system_profiler SPHardwareDataType | grep "SMC Version"').read().rstrip().replace('SMC Version (system): ', '').replace(' ','')
+    smc_version = get_system_profiler_data('SPHardwareDataType', 'mini', 'SMC Version (system): ')
   
     # Return SMC info
     return smc_version
@@ -202,10 +207,80 @@ def get_boot_rom_version():
     """
   
     # Get boot ROM version
-    boot_rom_version = os.popen('system_profiler SPHardwareDataType | grep "Boot ROM"').read().rstrip().replace('Boot ROM Version: ', '').replace(' ','')
+    boot_rom_version = get_system_profiler_data('SPHardwareDataType', 'mini', 'Boot ROM Version: ')
 
     # Return boot ROM info
     return boot_rom_version
+  
+def get_bluetooth():
+    """
+    Detects the Bluetooth version and paired devices
+    Returns:
+        paired_devices_summary [string]: List of paired device types and their number of occurrences
+            (ex. -Keyboard: 1)
+    """
+    
+    def get_paired_bluetooth_devices():
+        """
+        Retrieves a list of paired Bluetooth devices
+        Note: A paired device does not mean that it is currently connected
+        Returns:
+            paired_devices_summary [string]: List of paired device types and their number of occurrences
+                (ex. -Keyboard: 1)
+        """
+        # Gather a list of devices that are paired to this computer via Bluetooth
+        # (whether they are currently connected or not)
+        paired_devices_list = get_system_profiler_data('SPBluetoothDataType', 'mini', 'Minor Type: ')
+        
+        # Count the occurrence of each type of device
+        paired_devices_count = Counter(paired_devices_list.split())
+        
+        # Set the return string
+        paired_devices_summary = ""
+        
+        # Loop through each device type and the number of occurrences
+        for device in paired_devices_count:
+            paired_devices_summary += "-{}: {}\n".format(device, paired_devices_count[device])
+        
+        # Strip last newline from paired_devices_summary
+        paired_devices_summary = paired_devices_summary.rstrip()
+        
+        return paired_devices_summary
+        
+    # Get version of Bluetooth
+    bluetooth_version = get_system_profiler_data('SPBluetoothDataType', 'mini', 'Apple Bluetooth Software Version: ')
+    
+    # Get list of paired device types and their number of occurrences
+    paired_devices_summary = get_paired_bluetooth_devices()
+    
+    # Return the Bluetooth info
+    return paired_devices_summary, bluetooth_version
+  
+def get_system_profiler_data(classType, detail, line):
+    """
+    Can be used to gather information from the system_profiler command line tool
+    Parameters:
+        classType [string]: Part type (ex. SPBluetoothDataType)
+        detail [string]: Level of detail requested (ex. mini, basic, or full)
+        line [string]: What the line that you want starts with (ex. "Minor Type: ")
+    Returns:
+        result [string]: Output of the system_profiler command
+    """
+    command = ("system_profiler {} -detailLevel {} | grep '{}'").format(classType, detail, line)
+    result = os.popen(command).read().rstrip().replace(line, '').replace(' ','')
+    return result
+    
+def get_sysctl_data(item):
+    """
+    Can be used to gather information from the sysctl command line tool
+    Parameters:
+        item [string]: Item name (ex. kern.uuid)
+    Returns:
+        result [string]: Output of the sysctl command
+    """
+    command = ("sysctl {}").format(item)
+    result = os.popen(command).read().rstrip().replace(item, '').replace(': ','')
+    return result
   
 def print_results(type):
     """
@@ -215,37 +290,40 @@ def print_results(type):
             full: Print everything that is available
     """
     
-    # Get OS X version info
-    osx_version_number, osx_version_name = get_osx_version()
-    
-    # Get hostname
-    hostname = get_hostname()
-    
-    # Get UUIDs
-    kernel_uuid, hardware_uuid = get_uuids()
-    
-    # Get serial
-    serial = get_serial()
-    
-    # Get model info
-    model_name, model_identifier = get_model()
-    
-    # Get SMC info
-    smc_version = get_smc_version()
-    
-    # Get boot ROM info
-    boot_rom_version = get_boot_rom_version()
-    
-    # Get Clocks
-    last_boot = get_clocks()
-    
-    # Get CPU info
-    cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
-    
-    # Get RAM info
-    ram_total, swap_total = get_ram_information()
-    
-    # Print results
+    ## Gather data
+    # System Data
+    if type == 'full' or type == 'system':
+        model_name, model_identifier = get_model()
+        serial = get_serial()
+        hostname = get_hostname()
+        osx_version_number, osx_version_name = get_osx_version()
+        
+    # UUID Data
+    if type == 'full' or type == 'uuid' or type == 'uuids':
+        kernel_uuid, hardware_uuid, boot_session_uuid = get_uuids()
+        
+    # Clock Data
+    if type == 'full' or type == 'clocks':
+        last_boot = get_clocks()
+        
+    # CPU Data
+    if type == 'full' or type == 'cpu':
+        cpu_architecture, cpu_model, cpu_physical_cores, cpu_logical_cores, cpu_processor_count = get_cpu_information()
+        
+    # RAM Data
+    if type == 'full' or type == 'ram':
+        ram_total, swap_total = get_ram_information()
+        
+    # Bluetooth Data
+    if type == 'full' or type == 'bluetooth':
+        paired_devices, bluetooth_version = get_bluetooth()
+        
+    # Miscellaneous Data
+    if type == 'full' or type == 'misc' or type == 'miscellaneous':
+        boot_rom_version = get_boot_rom_version()
+        smc_version = get_smc_version()
+        
+    ## Print results
     # System Table
     if type == 'full' or type == 'system':
         print "\nSystem:"
@@ -262,7 +340,8 @@ def print_results(type):
         print "\nUUIDs:"
         uuid_table = [
             ["Kernel UUID", kernel_uuid],
-            ["Hardware UUID", hardware_uuid]
+            ["Hardware UUID", hardware_uuid],
+            ["Boot Session UUID", boot_session_uuid]
         ]
         print tabulate(uuid_table, tablefmt="fancy_grid")
         
@@ -295,6 +374,20 @@ def print_results(type):
         ]
         print tabulate(ram_table, tablefmt="fancy_grid")
         
+    # Bluetooth Table
+    if type == 'full' or type == 'bluetooth':
+        print "\nBluetooth Info:"
+        bluetooth_table = [
+            ["Version", bluetooth_version]
+        ]
+        print tabulate(bluetooth_table, tablefmt="fancy_grid")
+        
+        if paired_devices:
+            print "\nPaired Device Count:"
+            print paired_devices
+        else:
+            print "Paired Device Count: 0"
+           
     # Miscellaneous Table
     if type == 'full' or type == 'misc' or type == 'miscellaneous':
         print "\nMiscellaneous Info:"
