@@ -187,8 +187,8 @@ class RAMTest(unittest.TestCase):
         
         swap_total = get_ram_information()[1]
         
-        # Check to make sure the total amount of RAM is 2G
-        self.assertEqual(swap_total, '2G')
+        # Check to make sure the total amount of swap is is something "G"
+        self.assertIn('G', swap_total)
     
     def test_swap_total_type(self):
         """
