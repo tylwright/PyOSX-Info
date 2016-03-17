@@ -2,6 +2,7 @@
 A Python script used to gather information about an OS X system.
 <br>
 <img src='http://i.imgur.com/oaKybcA.png' width='400px'/>
+<figcaption>v0.1 Shown</figcaption>
 
 <h3>Requirements</h3>
 <ul>
@@ -9,6 +10,7 @@ A Python script used to gather information about an OS X system.
 <li>Python (Tested on 2.7.9)</li>
 <li>hurry.filesize (pip install hurry.filesize)</li>
 <li>tabulate (pip install tabulate)</li>
+<li>Collections/Counter (pip install counter)</li>
 <li>unittest2 (pip install unittest2)*</li>
 </ul>
 <i>* only needed if running unit tests</i>
@@ -121,7 +123,7 @@ New in v0.2:
 </li>
 <li>Improvements
 <ul>
-<li>Added get_system_profiler_data and get_sysctl_data.  Greatly reduces duplicate code</li>
+<li>Added get_system_profiler_data and get_sysctl_data.  Greatly reduces duplicate code.</li>
 </ul>
 </li>
 </ul>
