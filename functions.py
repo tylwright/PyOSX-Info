@@ -2,6 +2,7 @@
 import datetime, os, sys, platform
 from tabulate import tabulate
 from hurry.filesize import size, alternative
+from collections import Counter
 
 def confirm_osx():
     """
@@ -211,6 +212,50 @@ def get_boot_rom_version():
     # Return boot ROM info
     return boot_rom_version
   
+def get_bluetooth():
+    """
+    Detects the Bluetooth version and paired devices
+    Returns:
+        paired_devices_summary [string]: List of paired device types and their number of occurrences
+            (ex. -Keyboard: 1)
+    """
+    
+    def get_paired_bluetooth_devices():
+        """
+        Retrieves a list of paired Bluetooth devices
+        Note: A paired device does not mean that it is currently connected
+        Returns:
+            paired_devices_summary [string]: List of paired device types and their number of occurrences
+                (ex. -Keyboard: 1)
+        """
+        # Gather a list of devices that are paired to this computer via Bluetooth
+        # (whether they are currently connected or not)
+        paired_devices_list = os.popen('system_profiler SPBluetoothDataType -detailLevel mini | grep "Minor Type:"').read().rstrip().replace('Minor Type:', '').replace(' ','')
+        
+        # Count the occurrence of each type of device
+        paired_devices_count = Counter(paired_devices_list.split())
+        
+        # Set the return string
+        paired_devices_summary = ""
+        
+        # Loop through each device type and the number of occurrences
+        for device in paired_devices_count:
+            paired_devices_summary += "-{}: {}\n".format(device, paired_devices_count[device])
+        
+        # Strip last newline from paired_devices_summary
+        paired_devices_summary = paired_devices_summary.rstrip()
+        
+        return paired_devices_summary
+        
+    # Get version of Bluetooth
+    bluetooth_version = os.popen('system_profiler SPBluetoothDataType -detailLevel mini | grep "Apple Bluetooth Software Version:"').read().rstrip().replace('Apple Bluetooth Software Version:', '').replace(' ','')
+    
+    # Get list of paired device types and their number of occurrences
+    paired_devices_summary = get_paired_bluetooth_devices()
+    
+    # Return the Bluetooth info
+    return paired_devices_summary, bluetooth_version
+  
 def print_results(type):
     """
     Prints system information
@@ -242,6 +287,10 @@ def print_results(type):
     # RAM Data
     if type == 'full' or type == 'ram':
         ram_total, swap_total = get_ram_information()
+        
+    # Bluetooth Data
+    if type == 'full' or type == 'bluetooth':
+        paired_devices, bluetooth_version = get_bluetooth()
         
     # Miscellaneous Data
     if type == 'full' or type == 'misc' or type == 'miscellaneous':
@@ -299,6 +348,17 @@ def print_results(type):
         ]
         print tabulate(ram_table, tablefmt="fancy_grid")
         
+    # Bluetooth Table
+    if type == 'full' or type == 'bluetooth':
+        print "\nBluetooth Info:"
+        bluetooth_table = [
+            ["Version", bluetooth_version]
+        ]
+        print tabulate(bluetooth_table, tablefmt="fancy_grid")
+        
+        print "\nPaired Devices:"
+        print paired_devices
+           
     # Miscellaneous Table
     if type == 'full' or type == 'misc' or type == 'miscellaneous':
         print "\nMiscellaneous Info:"
