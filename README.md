@@ -1,4 +1,4 @@
-# PyOSX-Info v0.1
+# PyOSX-Info v0.2
 A Python script used to gather information about an OS X system.
 <br>
 <img src='http://i.imgur.com/oaKybcA.png' width='400px'/>
@@ -85,6 +85,15 @@ python pyosx.py system
 </td>
 </tr>
 <tr>
+<th>Bluetooth</th>
+<td>
+<ul>
+<li>Version</li>
+<li>Paired Device Count</li>
+</ul>
+</td>
+</tr>
+<tr>
 <th>Miscellaneous</th>
 <td>
 <ul>
@@ -98,5 +107,21 @@ python pyosx.py system
 <h3>Latest Updates</h3>
 New in v0.2:
 <ul>
+<li>Additions
+<ul>
 <li>Boot Session UUID</li>
+<li>Bluetooth Version</li>
+<li>Bluetooth Paired Device Count</li>
+</ul>
+</li>
+<li>Bug Fixes
+<ul>
+<li>Fixed unit test for swap space bug.  Errored if swap amount changed.</li>
+</ul>
+</li>
+<li>Improvements
+<ul>
+<li>Added get_system_profiler_data and get_sysctl_data.  Greatly reduces duplicate code</li>
+</ul>
+</li>
 </ul>
