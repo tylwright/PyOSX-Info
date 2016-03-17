@@ -356,8 +356,11 @@ def print_results(type):
         ]
         print tabulate(bluetooth_table, tablefmt="fancy_grid")
         
-        print "\nPaired Devices:"
-        print paired_devices
+        if paired_devices:
+            print "\nPaired Device Count:"
+            print paired_devices
+        else:
+            print "Paired Device Count: 0"
            
     # Miscellaneous Table
     if type == 'full' or type == 'misc' or type == 'miscellaneous':
