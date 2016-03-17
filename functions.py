@@ -73,13 +73,13 @@ def get_cpu_information():
     cpu_architecture = platform.machine()
     
     # Get CPU model
-    cpu_model = os.popen('sysctl -n machdep.cpu.brand_string').read().rstrip()
+    cpu_model = get_sysctl_data('machdep.cpu.brand_string')
     
     # Get number of physical cores that the system has
-    cpu_physical_cores = int(os.popen('sysctl hw.physicalcpu').read().rstrip().translate(None, 'hw.physicalcpu: '))
+    cpu_physical_cores = int(get_sysctl_data('hw.physicalcpu'))
     
     # Get number of logical cores that the system has
-    cpu_logical_cores = int(os.popen('sysctl hw.logicalcpu').read().rstrip().translate(None, 'hw.logicalcpu: '))
+    cpu_logical_cores = int(get_sysctl_data('hw.logicalcpu'))
     
     # Get number of processors installed
     cpu_processor_count = int(get_system_profiler_data('SPHardwareDataType', 'mini', 'Number of Processors: '))
@@ -96,10 +96,10 @@ def get_ram_information():
     """
     
     # Get total RAM (in human readable format)
-    ram_total = size(int(os.popen('sysctl hw.memsize').read().rstrip().translate(None, 'hw.memsize: ')))
+    ram_total = size(int(get_sysctl_data('hw.memsize')))
     
     # Get swap
-    swap_total = os.popen('sysctl vm.swapusage').read().rstrip().replace('vm.swapusage: ', '')
+    swap_total = get_sysctl_data('vm.swapusage')
     swap_total = swap_total.split('total = ')[1]
     swap_total = swap_total.split('  used =')[0]
     swap_total = swap_total.split('.')[0]
@@ -116,7 +116,7 @@ def get_hostname():
     """
     
     # Get hostname
-    hostname = os.popen('sysctl kern.hostname').read().rstrip().replace('kern.hostname: ', '')
+    hostname = get_sysctl_data('kern.hostname')
     
     # Return hostname
     return hostname
@@ -131,13 +131,13 @@ def get_uuids():
     """
     
     # Get UUID of kernel
-    kernel_uuid = os.popen('sysctl kern.uuid').read().rstrip().translate(None, 'kern.uuid: ')
+    kernel_uuid = get_sysctl_data('kern.uuid')
     
     # Get UUID of hardware
     hardware_uuid = get_system_profiler_data('SPHardwareDataType', 'basic', 'Hardware UUID: ')
     
     # Get UUID of boot session
-    boot_session_uuid = os.popen('sysctl kern.bootsessionuuid').read().rstrip().translate(None, 'kern.kern.bootsessionuuid: ')
+    boot_session_uuid = get_sysctl_data('kern.bootsessionuuid')
     
     # Return UUID
     return kernel_uuid, hardware_uuid, boot_session_uuid
@@ -150,7 +150,7 @@ def get_clocks():
     """
     
     # Get Uptime
-    last_boot = os.popen('sysctl kern.boottime').read().rstrip()
+    last_boot = get_sysctl_data('kern.boottime')
     last_boot = last_boot.split(' } ')[1]
     
     # Return last boot
@@ -268,6 +268,18 @@ def get_system_profiler_data(classType, detail, line):
     """
     command = ("system_profiler {} -detailLevel {} | grep '{}'").format(classType, detail, line)
     result = os.popen(command).read().rstrip().replace(line, '').replace(' ','')
+    return result
+    
+def get_sysctl_data(item):
+    """
+    Can be used to gather information from the sysctl command line tool
+    Parameters:
+        item [string]: Item name (ex. kern.uuid)
+    Returns:
+        result [string]: Output of the sysctl command
+    """
+    command = ("sysctl {}").format(item)
+    result = os.popen(command).read().rstrip().replace(item, '').replace(': ','')
     return result
   
 def print_results(type):
