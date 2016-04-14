@@ -27,8 +27,8 @@ class VersionTest(unittest.TestCase):
         
         running_version_number = get_osx_version()[0]
         
-        # Check to make sure the returned valued is 10.11.1
-        self.assertEqual(running_version_number, '10.11.1')
+        # Check to make sure the returned valued is 10.11.4
+        self.assertEqual(running_version_number, '10.11.4')
         
     def test_osx_version_name_type(self):
         """
@@ -187,8 +187,8 @@ class RAMTest(unittest.TestCase):
         
         swap_total = get_ram_information()[1]
         
-        # Check to make sure the total amount of swap is is something "G"
-        self.assertIn('G', swap_total)
+        # Check to make sure the total amount of swap is an integer ending with an B, M, or G
+        self.assertRegexpMatches(swap_total, '^[0-9]+[B,M,G]$')
     
     def test_swap_total_type(self):
         """
@@ -424,8 +424,8 @@ class BootROMTest(unittest.TestCase):
         
         boot_rom_version = get_boot_rom_version()
         
-        # Check to make sure the boot_rom_version is 'IM142.0118.B12'
-        self.assertEqual(boot_rom_version, 'IM142.0118.B12')
+        # Check to make sure the boot_rom_version is 'IM142.0118.B13'
+        self.assertEqual(boot_rom_version, 'IM142.0118.B13')
         
     def test_boot_rom_version_type(self):
         """
